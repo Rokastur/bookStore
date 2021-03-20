@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class BookService {
@@ -39,6 +38,15 @@ public class BookService {
 
     public Set<String> listBarcodesForTheInStockBooksGroupedByQuantity() {
         return bookRepository.findAllBarcodesOrderByNonNullQuantityDesc();
+    }
+
+    public SortedMap<String, BigDecimal> listAllBarcodesByBookTypeAndTotalPrice(String bookType) throws Exception {
+        Set<String> barcodesByBookType = bookRepository.findAllBarcodesByBookType(bookType);
+        SortedMap<String, BigDecimal> barcodePriceSorted = new TreeMap<>();
+        for (String s : barcodesByBookType) {
+            barcodePriceSorted.put(s, calculatePriceByBarcode(s));
+        }
+        return barcodePriceSorted;
     }
 
     public BigDecimal calculatePriceByBarcode(String barcode) throws Exception {
