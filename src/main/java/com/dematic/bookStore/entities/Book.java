@@ -11,6 +11,7 @@ import java.util.Set;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "Book_Type")
+@DiscriminatorValue("Book")
 public abstract class Book {
 
     @Id
@@ -21,6 +22,7 @@ public abstract class Book {
 
     protected Integer quantity;
 
+    @Column(name = "unit_price")
     protected BigDecimal unitPrice;
 
     @ManyToMany
