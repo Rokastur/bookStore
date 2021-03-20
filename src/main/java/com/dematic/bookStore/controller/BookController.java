@@ -5,8 +5,7 @@ import com.dematic.bookStore.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Set;
-import java.util.SortedMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/v1")
@@ -44,8 +43,8 @@ public class BookController {
     }
 
     @GetMapping("/books/barcodes-sorted-by-total-price/{bookType}")
-    public SortedMap<String, BigDecimal> getBarcodesSortedByTotalPriceByBookType(@PathVariable String bookType) throws Exception {
-        return bookService.listAllBarcodesByBookTypeAndTotalPrice(bookType);
+    public ArrayList<String> getBarcodesSortedByTotalPriceByBookType(@PathVariable String bookType) throws Exception {
+        return bookService.getBarcodesSortedByTotalPriceByBookType(bookType);
     }
 }
 

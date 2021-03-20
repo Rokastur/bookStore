@@ -40,13 +40,22 @@ public class BookService {
         return bookRepository.findAllBarcodesOrderByNonNullQuantityDesc();
     }
 
-    public SortedMap<String, BigDecimal> listAllBarcodesByBookTypeAndTotalPrice(String bookType) throws Exception {
+    public ArrayList<String> getBarcodesSortedByTotalPriceByBookType(String bookType) throws Exception {
         Set<String> barcodesByBookType = bookRepository.findAllBarcodesByBookType(bookType);
-        SortedMap<String, BigDecimal> barcodePriceSorted = new TreeMap<>();
-        for (String s : barcodesByBookType) {
-            barcodePriceSorted.put(s, calculatePriceByBarcode(s));
+        ArrayList<String> toSort = new ArrayList<>();
+        for (String barcode : barcodesByBookType) {
+            String combined = barcode + "/" + calculatePriceByBarcode(barcode);
+            toSort.add(combined);
         }
-        return barcodePriceSorted;
+        toSort.sort(new TotalPriceComparator());
+
+        ArrayList<String> sorted = new ArrayList<>();
+        for (String str : toSort) {
+            var done = str.substring(0, str.lastIndexOf('/'));
+            sorted.add(done);
+        }
+
+        return sorted;
     }
 
     public BigDecimal calculatePriceByBarcode(String barcode) throws Exception {
