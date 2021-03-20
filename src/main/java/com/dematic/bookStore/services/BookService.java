@@ -23,15 +23,14 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    public Optional<Book> retrieveBookByBarcode(String barcode) {
-        return bookRepository.findById(barcode);
+    public Book retrieveBookByBarcode(String barcode) throws Exception {
+        if (bookRepository.existsById(barcode)) {
+            return bookRepository.findById(barcode).get();
+        } else throw new Exception("book with the barcode: " + barcode + " not found");
     }
 
     public Book updateBook(String barcode, Book updatedBook) throws Exception {
-        Book existingBook;
-        if (retrieveBookByBarcode(barcode).isPresent()) {
-            existingBook = retrieveBookByBarcode(barcode).get();
-        } else throw new Exception("book with the barcode: " + barcode + " not found");
+        Book existingBook = retrieveBookByBarcode(barcode);
         updateNonNullFields(updatedBook, existingBook);
         return bookRepository.save(existingBook);
     }
@@ -50,10 +49,7 @@ public class BookService {
     }
 
     public BigDecimal calculatePriceByBarcode(String barcode) throws Exception {
-        Book book;
-        if (retrieveBookByBarcode(barcode).isPresent()) {
-            book = retrieveBookByBarcode(barcode).get();
-        } else throw new Exception("book with the barcode: " + barcode + " not found");
+        Book book = retrieveBookByBarcode(barcode);
 
         var nonIndexedPrice = calculateNonIndexedPrice(book);
 
