@@ -12,7 +12,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "Book_Type")
 @DiscriminatorValue("Book")
-public abstract class Book {
+public class Book {
 
     @Id
     @Column(nullable = false)
