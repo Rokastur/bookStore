@@ -1,8 +1,8 @@
 INSERT INTO Book(barcode, title, quantity, unit_price, Book_Type) VALUES('ABC', 'A', 5,5.55, 'Book');
 INSERT INTO Book(barcode, title, quantity, unit_price, Book_Type) VALUES('ABCD', 'B', 450,7.32, 'Book');
 INSERT INTO Book(barcode, title, quantity, unit_price, Book_Type) VALUES('ABCDE', 'C', 35,8.24, 'Book');
-INSERT INTO Book(barcode, title, quantity, unit_price, Book_Type) VALUES('ABCDEF', 'D', 2 ,3.78, 'Book');
-INSERT INTO Book(barcode, title, quantity, unit_price, Book_Type) VALUES('ABCDEFG', 'E', 10,54.29, 'Book');
+INSERT INTO Book(barcode, title, quantity, unit_price, Book_Type, release_year) VALUES('ABCDEF', 'D', 2 ,3.78, 'AntiqueBook', '1885-01-01');
+INSERT INTO Book(barcode, title, quantity, unit_price, Book_Type, science_index) VALUES('ABCDEFG', 'E', 10,54.29, 'ScienceJournal', 6);
 
 
 
