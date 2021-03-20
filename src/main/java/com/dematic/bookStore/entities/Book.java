@@ -1,13 +1,17 @@
 package com.dematic.bookStore.entities;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "Book_Type")
@@ -25,7 +29,9 @@ public class Book {
     @Column(name = "unit_price")
     protected BigDecimal unitPrice;
 
+
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(
             name = "Book_Authors",
             joinColumns = @JoinColumn(name = "barcode"),
@@ -40,5 +46,16 @@ public class Book {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return barcode.equals(book.barcode) && title.equals(book.title) && quantity.equals(book.quantity) && unitPrice.equals(book.unitPrice);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(barcode, title, quantity, unitPrice);
+    }
 }
