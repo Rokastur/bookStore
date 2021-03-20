@@ -43,7 +43,7 @@ public class BookController {
         return bookService.listBarcodesForTheInStockBooksGroupedByQuantity();
     }
 
-    @GetMapping("/books/barcodes-sorted-by-total-price/{bookType")
+    @GetMapping("/books/barcodes-sorted-by-total-price/{bookType}")
     public SortedMap<String, BigDecimal> getBarcodesSortedByTotalPriceByBookType(@PathVariable String bookType) throws Exception {
         return bookService.listAllBarcodesByBookTypeAndTotalPrice(bookType);
     }
