@@ -10,6 +10,6 @@ import java.util.Set;
 @Repository
 public interface BookRepository extends CrudRepository<Book, String> {
 
-    @Query(value = "SELECT Barcode FROM BOOK WHERE quantity > 0 ORDER BY COUNT DESC", nativeQuery = true)
+    @Query(value = "SELECT Barcode FROM BOOK WHERE quantity > 0 ORDER BY QUANTITY DESC", nativeQuery = true)
     Set<String> findAllBarcodesOrderByNonNullQuantityDesc();
 }
