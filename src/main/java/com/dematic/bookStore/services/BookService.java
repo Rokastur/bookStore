@@ -7,6 +7,7 @@ import com.dematic.bookStore.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -64,20 +65,21 @@ public class BookService {
 
     public BigDecimal calculateScienceJournalPrice(Book book, BigDecimal nonIndexedPrice) {
         var scienceIndexAsBigDecimal = new BigDecimal(((ScienceJournal) book).getScienceIndex());
-        return nonIndexedPrice.multiply(scienceIndexAsBigDecimal);
+        return nonIndexedPrice.multiply(scienceIndexAsBigDecimal).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal calculateAntiqueBookPrice(Book book, BigDecimal nonIndexedPrice) {
         LocalDate currentTime = LocalDate.now();
         var currentYear = currentTime.getYear();
         var releaseYear = ((AntiqueBook) book).getReleaseYear().getYear();
-        var ageIndex = (currentYear - releaseYear) / 10;
-        return nonIndexedPrice.multiply(new BigDecimal(ageIndex));
+        double yearDifference = currentYear - releaseYear;
+        var ageIndex = yearDifference / 10;
+        return (nonIndexedPrice.multiply(new BigDecimal(ageIndex))).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal calculateNonIndexedPrice(Book book) {
         var quantity = new BigDecimal(book.getQuantity());
-        return book.getUnitPrice().multiply(quantity);
+        return book.getUnitPrice().multiply(quantity).setScale(2, RoundingMode.HALF_UP);
 
     }
 
