@@ -12,6 +12,7 @@ INSERT INTO Author (id, name, last_name) VALUES (3,'Z','ZZ');
 INSERT INTO Author (id, name, last_name) VALUES (4,'T','TT');
 
 INSERT INTO Book_Authors(barcode, author_id) VALUES ('ABC',1);
+INSERT INTO Book_Authors(barcode, author_id) VALUES ('ABC',2);
 INSERT INTO Book_Authors(barcode, author_id) VALUES ('ABCD',2);
 INSERT INTO Book_Authors(barcode, author_id) VALUES ('ABCDE',3);
 INSERT INTO Book_Authors(barcode, author_id) VALUES ('ABCDEF',4);
