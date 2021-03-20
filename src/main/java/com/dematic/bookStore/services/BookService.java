@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BookService {
@@ -34,6 +35,10 @@ public class BookService {
         } else throw new Exception("book with the barcode: " + barcode + " not found");
         updateNonNullFields(updatedBook, existingBook);
         return bookRepository.save(existingBook);
+    }
+
+    public Set<String> listBarcodesForTheInStockBooksGroupedByQuantity() {
+        return bookRepository.findAllBarcodesOrderByNonNullQuantityDesc();
     }
 
     public BigDecimal calculatePriceByBarcode(String barcode) throws Exception {
