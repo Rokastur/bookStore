@@ -5,7 +5,6 @@ import com.dematic.bookStore.entities.AntiqueBook;
 import com.dematic.bookStore.entities.Author;
 import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.entities.ScienceJournal;
-import com.dematic.bookStore.repositories.AuthorRepository;
 import com.dematic.bookStore.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,42 +17,60 @@ import java.util.*;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
+    private final AuthorService authorService;
 
-    public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
+    public BookService(BookRepository bookRepository, AuthorService authorService) {
         this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
+        this.authorService = authorService;
     }
 
-    public Book addNewBook(BookAuthorDTO dto) {
+    public boolean bookIsScienceJournal(BookAuthorDTO dto) {
+        return dto.getScienceIndex() != null;
+    }
+
+    public boolean bookIsAntique(BookAuthorDTO dto) {
+        return dto.getReleaseYear() != null;
+    }
+
+    public Book addNewBook(BookAuthorDTO dto) throws Exception {
 
         String[] dtoAuthors = dto.getAuthors();
-
         Set<Author> authors = new HashSet<>();
 
         for (String author : dtoAuthors) {
-            int spaceLocation = author.indexOf(' ');
-            int length = author.length();
-            String firstName = author.substring(0, spaceLocation).strip();
-            String lastName = author.substring(spaceLocation, length).strip();
-            if (!authorRepository.existsByNameAndLastName(firstName, lastName)) {
+            String firstName = extractFirstName(author);
+            String lastName = extractLastName(author);
+            if (!authorService.exists(firstName, lastName)) {
                 Author a = new Author(firstName, lastName);
-                authors.add(authorRepository.save(a));
-            } else {
-                authors.add(authorRepository.getOneByNameAndLastName(firstName, lastName));
+                authorService.saveAuthor(a);
             }
+            authors.add(authorService.findByFullName(firstName, lastName));
         }
 
         Book book;
-        if (dto.getScienceIndex() != null) {
+        if (bookIsScienceJournal(dto) && bookIsAntique(dto)) {
+            throw new Exception("book can not be both an antique and a science journal");
+        }
+        if (bookIsScienceJournal(dto)) {
             book = new ScienceJournal(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getScienceIndex());
-        } else if (dto.getReleaseYear() != null) {
+        } else if (bookIsAntique(dto)) {
             book = new AntiqueBook(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getReleaseYear());
         } else {
             book = new Book(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors);
         }
 
         return bookRepository.save(book);
+    }
+
+    public String extractFirstName(String author) {
+        int spaceLocation = author.indexOf(' ');
+        return author.substring(0, spaceLocation).strip();
+    }
+
+    public String extractLastName(String author) {
+        int spaceLocation = author.indexOf(' ');
+        int length = author.length();
+        return author.substring(spaceLocation, length).strip();
     }
 
     public Book retrieveBookByBarcode(String barcode) throws Exception {
