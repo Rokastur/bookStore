@@ -88,7 +88,9 @@ public class BookService {
 
     public BigDecimal calculateNonIndexedPrice(Book book) {
         var quantity = new BigDecimal(book.getQuantity());
-        return book.getUnitPrice().multiply(quantity).setScale(2, RoundingMode.HALF_UP);
+        var nonRoundedTotalPrice = book.getUnitPrice().multiply(quantity);
+        var roundedTotalPrice = nonRoundedTotalPrice.setScale(2, RoundingMode.HALF_UP);
+        return roundedTotalPrice;
 
     }
 
