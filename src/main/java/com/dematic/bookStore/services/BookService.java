@@ -42,14 +42,7 @@ public class BookService {
         }
     }
 
-    public String[] parseName(String author) {
-        String firstName = extractFirstName(author);
-        String lastName = extractLastName(author);
-        return new String[]{firstName, lastName};
-    }
-
     public Set<Author> parseAuthors(BookAuthorDTO dto) {
-
         Set<Author> authors = new HashSet<>();
         saveNewAuthorsToDb(dto);
         for (String author : dto.getAuthors()) {
@@ -58,6 +51,14 @@ public class BookService {
             return authors;
         }
         return authors;
+    }
+
+    public String[] parseName(String author) {
+        int spaceLocation = author.indexOf(' ');
+        int length = author.length();
+        String firstName = author.substring(0, spaceLocation).strip();
+        String lastName = author.substring(spaceLocation, length).strip();
+        return new String[]{firstName, lastName};
     }
 
     public Book updateBook(String barcode, BookAuthorDTO dto) {
@@ -106,17 +107,6 @@ public class BookService {
         }
 
         return bookRepository.save(book);
-    }
-
-    public String extractFirstName(String author) {
-        int spaceLocation = author.indexOf(' ');
-        return author.substring(0, spaceLocation).strip();
-    }
-
-    public String extractLastName(String author) {
-        int spaceLocation = author.indexOf(' ');
-        int length = author.length();
-        return author.substring(spaceLocation, length).strip();
     }
 
     public Book retrieveBookByBarcode(String barcode) throws Exception {
