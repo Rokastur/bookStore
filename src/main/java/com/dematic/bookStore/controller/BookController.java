@@ -43,7 +43,7 @@ public class BookController {
     }
 
     @GetMapping("/books/barcodes-sorted-by-total-price/{bookType}")
-    public ArrayList<String> getBarcodesSortedByTotalPriceByBookType(@PathVariable String bookType) throws Exception {
+    public ArrayList<String> getBarcodesSortedByTotalPriceAscByBookType(@PathVariable String bookType) throws Exception {
         return bookService.getBarcodesSortedByTotalPriceByBookType(bookType);
     }
 }
