@@ -18,8 +18,8 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public Book addBook(@RequestBody Book newBook) {
-        return bookService.addNewBook(newBook);
+    public Book addBook(@RequestBody BookAuthorDTO dto) {
+        return bookService.addNewBook(dto);
     }
 
     @GetMapping("/books/{barcode}")
