@@ -1,8 +1,11 @@
 package com.dematic.bookStore.services;
 
+import com.dematic.bookStore.controller.BookAuthorDTO;
 import com.dematic.bookStore.entities.AntiqueBook;
+import com.dematic.bookStore.entities.Author;
 import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.entities.ScienceJournal;
+import com.dematic.bookStore.repositories.AuthorRepository;
 import com.dematic.bookStore.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +18,41 @@ import java.util.*;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
-    public Book addNewBook(Book book) {
+    public Book addNewBook(BookAuthorDTO dto) {
+
+        String[] dtoAuthors = dto.getAuthors();
+
+        Set<Author> authors = new HashSet<>();
+
+        for (String author : dtoAuthors) {
+            int spaceLocation = author.indexOf(' ');
+            int length = author.length();
+            String firstName = author.substring(0, spaceLocation).strip();
+            String lastName = author.substring(spaceLocation, length).strip();
+            if (!authorRepository.existsByNameAndLastName(firstName, lastName)) {
+                Author a = new Author(firstName, lastName);
+                authors.add(authorRepository.save(a));
+            } else {
+                authors.add(authorRepository.getOneByNameAndLastName(firstName, lastName));
+            }
+        }
+
+        Book book;
+        if (dto.getScienceIndex() != null) {
+            book = new ScienceJournal(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getScienceIndex());
+        } else if (dto.getReleaseYear() != null) {
+            book = new AntiqueBook(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getReleaseYear());
+        } else {
+            book = new Book(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors);
+        }
+
         return bookRepository.save(book);
     }
 
