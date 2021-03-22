@@ -49,13 +49,13 @@ public class BookService {
         }
         toSort.sort(new TotalPriceComparator());
 
-        ArrayList<String> sorted = new ArrayList<>();
+        ArrayList<String> barcodesByTotalPriceDesc = new ArrayList<>();
         for (String str : toSort) {
-            var done = str.substring(0, str.lastIndexOf('/'));
-            sorted.add(done);
+            var barcode = str.substring(0, str.lastIndexOf('/'));
+            barcodesByTotalPriceDesc.add(barcode);
         }
 
-        return sorted;
+        return barcodesByTotalPriceDesc;
     }
 
     public BigDecimal calculatePriceByBarcode(String barcode) throws Exception {
