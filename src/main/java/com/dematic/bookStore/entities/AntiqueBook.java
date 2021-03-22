@@ -26,7 +26,7 @@ public class AntiqueBook extends Book {
         super();
     }
 
-    @NotNull
+    @NotNull(message = "Release year must not be null")
     @Column(name = "release_year")
     private LocalDate releaseYear;
 }

@@ -36,13 +36,13 @@ public class Book {
     @Pattern(regexp = BookAuthorDTO.ISBNRegex, message = "Invalid ISBN [ENTITY]")
     protected String barcode;
 
-    @NotEmpty
+    @NotEmpty(message = "Title must must not be null nor empty.")
     protected String title;
 
-    @NotNull
+    @NotNull(message = "Quantity must not be null")
     protected Integer quantity;
 
-    @NotNull
+    @NotNull(message = "Unit price must not be null")
     @Column(name = "unit_price")
     protected BigDecimal unitPrice;
 

@@ -25,7 +25,7 @@ public class ScienceJournal extends Book {
         this.scienceIndex = scienceIndex;
     }
 
-    @NotNull
+    @NotNull(message = "Science index must not be null")
     @Column(name = "science_index")
     private Integer scienceIndex;
 }
