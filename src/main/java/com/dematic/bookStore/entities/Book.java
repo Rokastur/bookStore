@@ -17,6 +17,17 @@ import java.util.Set;
 @DiscriminatorValue("Book")
 public class Book {
 
+    public Book() {
+    }
+
+    public Book(String barcode, String title, Integer quantity, BigDecimal unitPrice, Set<Author> authors) {
+        this.barcode = barcode;
+        this.title = title;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.authors = authors;
+    }
+
     @Id
     @Column(nullable = false)
     protected String barcode;

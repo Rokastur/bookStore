@@ -6,12 +6,23 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @DiscriminatorValue("ScienceJournal")
 public class ScienceJournal extends Book {
+
+    public ScienceJournal() {
+        super();
+    }
+
+    public ScienceJournal(String barcode, String title, Integer quantity, BigDecimal unitPrice, Set<Author> authors, Integer scienceIndex) {
+        super(barcode, title, quantity, unitPrice, authors);
+        this.scienceIndex = scienceIndex;
+    }
 
     @Column(name = "science_index")
     private Integer scienceIndex;

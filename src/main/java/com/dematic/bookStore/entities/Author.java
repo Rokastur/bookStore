@@ -15,6 +15,14 @@ import java.util.Set;
 @Setter
 public class Author {
 
+    public Author() {
+    }
+
+    public Author(String name, String lastName) {
+        this.name = name;
+        this.lastName = lastName;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
