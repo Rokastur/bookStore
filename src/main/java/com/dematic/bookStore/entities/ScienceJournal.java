@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ public class ScienceJournal extends Book {
         this.scienceIndex = scienceIndex;
     }
 
+    @NotNull
     @Column(name = "science_index")
     private Integer scienceIndex;
 }

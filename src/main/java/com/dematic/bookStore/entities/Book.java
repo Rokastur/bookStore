@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -34,13 +36,15 @@ public class Book {
     @Pattern(regexp = BookAuthorDTO.ISBNRegex, message = "Invalid ISBN [ENTITY]")
     protected String barcode;
 
+    @NotEmpty
     protected String title;
 
+    @NotNull
     protected Integer quantity;
 
+    @NotNull
     @Column(name = "unit_price")
     protected BigDecimal unitPrice;
-
 
     @ManyToMany
     @JoinTable(

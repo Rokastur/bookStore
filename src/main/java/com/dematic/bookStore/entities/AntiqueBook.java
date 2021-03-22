@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class AntiqueBook extends Book {
         super();
     }
 
+    @NotNull
     @Column(name = "release_year")
     private LocalDate releaseYear;
 }
