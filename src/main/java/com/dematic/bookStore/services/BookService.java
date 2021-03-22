@@ -32,25 +32,71 @@ public class BookService {
         return dto.getReleaseYear() != null;
     }
 
-    public Book addNewBook(BookAuthorDTO dto) throws Exception {
-
+    public void saveNewAuthorsToDb(BookAuthorDTO dto) {
         String[] dtoAuthors = dto.getAuthors();
-        Set<Author> authors = new HashSet<>();
-
         for (String author : dtoAuthors) {
-            String firstName = extractFirstName(author);
-            String lastName = extractLastName(author);
-            if (!authorService.exists(firstName, lastName)) {
-                Author a = new Author(firstName, lastName);
-                authorService.saveAuthor(a);
+            String[] name = parseName(author);
+            if (!authorService.exists(name[0], name[1])) {
+                authorService.saveAuthor(new Author(name[0], name[1]));
             }
-            authors.add(authorService.findByFullName(firstName, lastName));
         }
+    }
 
-        Book book;
-        if (bookIsScienceJournal(dto) && bookIsAntique(dto)) {
-            throw new Exception("book can not be both an antique and a science journal");
+    public String[] parseName(String author) {
+        String firstName = extractFirstName(author);
+        String lastName = extractLastName(author);
+        return new String[]{firstName, lastName};
+    }
+
+    public Set<Author> parseAuthors(BookAuthorDTO dto) {
+
+        Set<Author> authors = new HashSet<>();
+        saveNewAuthorsToDb(dto);
+        for (String author : dto.getAuthors()) {
+            String[] name = parseName(author);
+            authors.add(authorService.findByFullName(name[0], name[1]));
+            return authors;
         }
+        return authors;
+    }
+
+    public Book updateBook(String barcode, BookAuthorDTO dto) {
+        Set<Author> authors = parseAuthors(dto);
+        Book book = bookRepository.getOneByBarcode(barcode);
+
+        if (dto.getBarcode() != null) {
+            book.setBarcode(dto.getBarcode());
+        }
+        if (dto.getQuantity() != null) {
+            book.setQuantity(dto.getQuantity());
+        }
+        if (dto.getTitle() != null) {
+            book.setTitle(dto.getTitle());
+        }
+        if (dto.getUnitPrice() != null) {
+            book.setUnitPrice(dto.getUnitPrice());
+        }
+        if (!authors.isEmpty()) {
+            for (Author a : book.getAuthors()) {
+                book.removeAuthor(a);
+            }
+            for (Author a : authors) {
+                book.addAuthor(a);
+            }
+
+        }
+        if (book instanceof ScienceJournal && dto.getScienceIndex() != null) {
+            ((ScienceJournal) book).setScienceIndex(dto.getScienceIndex());
+        }
+        if (book instanceof AntiqueBook && dto.getReleaseYear() != null) {
+            ((AntiqueBook) book).setReleaseYear(dto.getReleaseYear());
+        }
+        return bookRepository.save(book);
+    }
+
+    public Book addNewBook(BookAuthorDTO dto) {
+        Set<Author> authors = parseAuthors(dto);
+        Book book;
         if (bookIsScienceJournal(dto)) {
             book = new ScienceJournal(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getScienceIndex());
         } else if (bookIsAntique(dto)) {
@@ -75,14 +121,8 @@ public class BookService {
 
     public Book retrieveBookByBarcode(String barcode) throws Exception {
         if (bookRepository.existsById(barcode)) {
-            return bookRepository.findById(barcode).get();
+            return bookRepository.getOneByBarcode(barcode);
         } else throw new Exception("book with the barcode: " + barcode + " not found");
-    }
-
-    public Book updateBook(String barcode, Book updatedBook) throws Exception {
-        Book existingBook = retrieveBookByBarcode(barcode);
-        updateNonNullFields(updatedBook, existingBook);
-        return bookRepository.save(existingBook);
     }
 
     public Set<String> listBarcodesForTheInStockBooksGroupedByQuantity() {
@@ -141,23 +181,5 @@ public class BookService {
         var roundedTotalPrice = nonRoundedTotalPrice.setScale(2, RoundingMode.HALF_UP);
         return roundedTotalPrice;
 
-    }
-
-    public void updateNonNullFields(Book updatedBook, Book existingBook) {
-        if (updatedBook.getBarcode() != null) {
-            existingBook.setBarcode(updatedBook.getBarcode());
-        }
-        if (!updatedBook.getAuthors().isEmpty()) {
-            existingBook.setAuthors(updatedBook.getAuthors());
-        }
-        if (updatedBook.getQuantity() != null) {
-            existingBook.setQuantity(updatedBook.getQuantity());
-        }
-        if (updatedBook.getTitle() != null) {
-            existingBook.setTitle(updatedBook.getTitle());
-        }
-        if (updatedBook.getUnitPrice() != null) {
-            existingBook.setUnitPrice(updatedBook.getUnitPrice());
-        }
     }
 }
