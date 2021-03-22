@@ -152,8 +152,8 @@ public class BookService {
     }
 
     public BigDecimal calculateScienceJournalPrice(Book book, BigDecimal nonIndexedPrice) {
-        var scienceIndexAsBigDecimal = new BigDecimal(((ScienceJournal) book).getScienceIndex());
-        return nonIndexedPrice.multiply(scienceIndexAsBigDecimal).setScale(2, RoundingMode.HALF_UP);
+        var scienceIndex = new BigDecimal(((ScienceJournal) book).getScienceIndex());
+        return nonIndexedPrice.multiply(scienceIndex).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal calculateAntiqueBookPrice(Book book, BigDecimal nonIndexedPrice) {
