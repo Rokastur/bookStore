@@ -1,9 +1,11 @@
 package com.dematic.bookStore.entities;
 
+import com.dematic.bookStore.controller.BookAuthorDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
@@ -29,7 +31,7 @@ public class Book {
     }
 
     @Id
-    @Column(nullable = false)
+    @Pattern(regexp = BookAuthorDTO.ISBNRegex, message = "Invalid ISBN [ENTITY]")
     protected String barcode;
 
     protected String title;

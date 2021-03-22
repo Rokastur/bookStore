@@ -4,6 +4,7 @@ import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public Book addBook(@RequestBody BookAuthorDTO dto) throws Exception {
+    public Book addBook(@Valid @RequestBody BookAuthorDTO dto) throws Exception {
         return bookService.addNewBook(dto);
     }
 
