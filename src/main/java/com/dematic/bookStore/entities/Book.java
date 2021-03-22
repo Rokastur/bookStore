@@ -48,11 +48,14 @@ public class Book {
     )
     protected Set<Author> authors = new HashSet<>();
 
-    public void addAuthors(Set<Author> authors) {
-        for (Author a : authors) {
-            authors.add(a);
-            a.getBooks().add(this);
-        }
+    public void addAuthor(Author author) {
+        this.authors.add(author);
+        author.getBooks().add(this);
+    }
+
+    public void removeAuthor(Author author) {
+        this.authors.remove(author);
+        author.getBooks().remove(this);
     }
 
     @Override
