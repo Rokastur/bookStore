@@ -28,8 +28,8 @@ public class BookController {
     }
 
     @PutMapping("/books/{barcode}")
-    public Book updateBook(@RequestBody Book newBook, @PathVariable String barcode) throws Exception {
-        return bookService.updateBook(barcode, newBook);
+    public Book updateBook(@RequestBody BookAuthorDTO dto, @PathVariable String barcode) {
+        return bookService.updateBook(barcode, dto);
     }
 
     @GetMapping("/books/total-price/{barcode}")
