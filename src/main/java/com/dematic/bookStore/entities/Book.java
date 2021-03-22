@@ -1,6 +1,5 @@
 package com.dematic.bookStore.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +30,6 @@ public class Book {
 
 
     @ManyToMany
-    @JsonManagedReference
     @JoinTable(
             name = "Book_Authors",
             joinColumns = @JoinColumn(name = "barcode"),
