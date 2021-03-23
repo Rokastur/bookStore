@@ -50,13 +50,7 @@ public class BookService {
             book.setUnitPrice(dto.getUnitPrice());
         }
         if (!authors.isEmpty()) {
-            for (Author a : book.getAuthors()) {
-                book.removeAuthor(a);
-            }
-            for (Author a : authors) {
-                book.addAuthor(a);
-            }
-
+            book.updateAuthors(authors);
         }
         if (book instanceof ScienceJournal && dto.getScienceIndex() != null) {
             ((ScienceJournal) book).setScienceIndex(dto.getScienceIndex());
