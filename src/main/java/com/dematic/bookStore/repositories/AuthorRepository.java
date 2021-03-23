@@ -9,9 +9,5 @@ import java.util.Optional;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
-    boolean existsByNameAndLastName(String name, String lastName);
-
-    Author getOneByNameAndLastName(String name, String lastName);
-
     Optional<Author> findOneByNameAndLastName(String name, String lastName);
 }

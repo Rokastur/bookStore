@@ -22,14 +22,6 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    public boolean exists(String firstName, String lastName) {
-        return authorRepository.existsByNameAndLastName(firstName, lastName);
-    }
-
-    public Author findByFullName(String firstName, String lastName) {
-        return authorRepository.getOneByNameAndLastName(firstName, lastName);
-    }
-
     public Set<Author> parseAuthors(BookAuthorDTO dto) {
         Set<Author> authors = new HashSet<>();
         for (String author : dto.getAuthors()) {
