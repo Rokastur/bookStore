@@ -99,14 +99,25 @@ public class BookService {
         Set<Author> authors = parseAuthors(dto);
         Book book;
         if (bookIsScienceJournal(dto)) {
-            book = new ScienceJournal(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getScienceIndex());
+            book = createNewScienceJournal(dto, authors);
         } else if (bookIsAntique(dto)) {
-            book = new AntiqueBook(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getReleaseYear());
+            book = createNewAntiqueBook(dto, authors);
         } else {
-            book = new Book(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors);
+            book = createNewRegularBook(dto, authors);
         }
-
         return bookRepository.save(book);
+    }
+
+    public Book createNewScienceJournal(BookAuthorDTO dto, Set<Author> authors) {
+        return new ScienceJournal(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getScienceIndex());
+    }
+
+    public Book createNewAntiqueBook(BookAuthorDTO dto, Set<Author> authors) {
+        return new AntiqueBook(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getReleaseYear());
+    }
+
+    public Book createNewRegularBook(BookAuthorDTO dto, Set<Author> authors) {
+        return new Book(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors);
     }
 
     public Book retrieveBookByBarcode(String barcode) throws Exception {
