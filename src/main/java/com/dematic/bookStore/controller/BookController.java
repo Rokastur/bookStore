@@ -19,7 +19,7 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public Book addBook(@Valid @RequestBody BookAuthorDTO dto) throws Exception {
+    public Book addBook(@RequestBody @Valid BookAuthorDTO dto) throws Exception {
         return bookService.addNewBook(dto);
     }
 
@@ -29,7 +29,7 @@ public class BookController {
     }
 
     @PutMapping("/books/{barcode}")
-    public Book updateBook(@RequestBody BookAuthorDTO dto, @PathVariable String barcode) {
+    public Book updateBook(@RequestBody @Valid BookAuthorDTO dto, @PathVariable String barcode) {
         return bookService.updateBook(barcode, dto);
     }
 
