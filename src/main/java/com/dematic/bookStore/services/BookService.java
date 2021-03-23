@@ -32,37 +32,9 @@ public class BookService {
         return dto.getReleaseYear() != null;
     }
 
-    public void saveNewAuthorsToDb(BookAuthorDTO dto) {
-        String[] dtoAuthors = dto.getAuthors();
-        for (String author : dtoAuthors) {
-            String[] name = parseName(author);
-            if (!authorService.exists(name[0], name[1])) {
-                authorService.saveAuthor(new Author(name[0], name[1]));
-            }
-        }
-    }
-
-    public Set<Author> parseAuthors(BookAuthorDTO dto) {
-        Set<Author> authors = new HashSet<>();
-        saveNewAuthorsToDb(dto);
-        for (String author : dto.getAuthors()) {
-            String[] name = parseName(author);
-            authors.add(authorService.findByFullName(name[0], name[1]));
-            return authors;
-        }
-        return authors;
-    }
-
-    public String[] parseName(String author) {
-        int spaceLocation = author.indexOf(' ');
-        int length = author.length();
-        String firstName = author.substring(0, spaceLocation).strip();
-        String lastName = author.substring(spaceLocation, length).strip();
-        return new String[]{firstName, lastName};
-    }
 
     public Book updateBook(String barcode, BookAuthorDTO dto) {
-        Set<Author> authors = parseAuthors(dto);
+        Set<Author> authors = authorService.parseAuthors(dto);
         Book book = bookRepository.getOneByBarcode(barcode);
 
         if (dto.getBarcode() != null) {
@@ -96,7 +68,7 @@ public class BookService {
     }
 
     public Book addNewBook(BookAuthorDTO dto) {
-        Set<Author> authors = parseAuthors(dto);
+        Set<Author> authors = authorService.parseAuthors(dto);
         Book book;
         if (bookIsScienceJournal(dto)) {
             book = createNewScienceJournal(dto, authors);
