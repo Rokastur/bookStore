@@ -23,16 +23,18 @@ public class AuthorService {
     }
 
     public Set<Author> parseAuthors(BookAuthorDTO dto) {
-        Set<Author> authors = new HashSet<>();
-        for (String author : dto.getAuthors()) {
-            String[] name = parseName(author);
-            Optional<Author> a = authorRepository.findOneByNameAndLastName(name[0], name[1]);
-            if (a.isEmpty()) {
-                a = Optional.ofNullable(saveAuthor(new Author(name[0], name[1])));
+        if (dto.getAuthors() != null) {
+            Set<Author> authors = new HashSet<>();
+            for (String author : dto.getAuthors()) {
+                String[] name = parseName(author);
+                Optional<Author> a = authorRepository.findOneByNameAndLastName(name[0], name[1]);
+                if (a.isEmpty()) {
+                    a = Optional.ofNullable(saveAuthor(new Author(name[0], name[1])));
+                }
+                a.ifPresent(authors::add);
             }
-            a.ifPresent(authors::add);
-        }
-        return authors;
+            return authors;
+        } else return new HashSet<>();
     }
 
     public String[] parseName(String author) {
