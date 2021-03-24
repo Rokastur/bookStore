@@ -1,5 +1,6 @@
 package com.dematic.bookStore.services;
 
+import com.dematic.bookStore.controller.BarcodesWrapper;
 import com.dematic.bookStore.controller.BookAuthorDTO;
 import com.dematic.bookStore.entities.AntiqueBook;
 import com.dematic.bookStore.entities.Author;
@@ -93,8 +94,16 @@ public class BookService {
         return null;
     }
 
-    public Set<String> listBarcodesForTheInStockBooksGroupedByQuantity() {
-        return bookRepository.findAllBarcodesOrderByNonNullQuantityDesc();
+    public List<BarcodesWrapper> barcodesDTOS() {
+        List<String> b = bookRepository.findAllBarcodesOrderByNonNullQuantityDesc();
+        List<BarcodesWrapper> barcodesDTOS = new ArrayList<>();
+        for (String bar : b) {
+            var dto = new BarcodesWrapper();
+            dto.setValue(bar);
+            barcodesDTOS.add(dto);
+
+        }
+        return barcodesDTOS;
     }
 
     public ArrayList<String> getBarcodesSortedByTotalPriceByBookType(String bookType) {
