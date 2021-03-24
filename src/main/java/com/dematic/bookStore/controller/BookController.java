@@ -2,11 +2,17 @@ package com.dematic.bookStore.controller;
 
 import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.services.BookService;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/v1")
@@ -21,14 +27,17 @@ public class BookController {
     //A client can use a REST call to put a book into the system
     // providing its name, author, barcode, quantity, price per unit.
     @PostMapping("/books")
-    public Book addBook(@RequestBody @Valid BookAuthorDTO dto) throws Exception {
+    public Book addBook(@RequestBody @Valid BookAuthorDTO dto) {
         return bookService.addNewBook(dto);
     }
 
     //A client can use a REST call to retrieve book’s information from a system by providing its barcode.
     @GetMapping("/books/{barcode}")
-    public Book getBook(@PathVariable String barcode) throws Exception {
-        return bookService.retrieveBookByBarcode(barcode);
+    public EntityModel<Book> getBook(@PathVariable String barcode) {
+        Book book = bookService.retrieveBookByBarcode(barcode);
+        return EntityModel.of(book,
+                linkTo(methodOn(BookController.class).getBook(barcode)).withSelfRel(),
+                linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withRel("in-stock"));
     }
 
 
@@ -47,13 +56,18 @@ public class BookController {
 
     //A client can use a REST call to request a list of all barcodes for the books in stock grouped by quantity
     @GetMapping("/books/in-stock")
-    public Set<String> getBarcodesForInStockBooks() {
-        return bookService.listBarcodesForTheInStockBooksGroupedByQuantity();
+    public CollectionModel<EntityModel<BarcodesWrapper>> getBarcodesForInStockBooks() {
+        List<EntityModel<BarcodesWrapper>> barcodes = bookService.barcodesDTOS().stream()
+                .map(barcode -> EntityModel.of(barcode,
+                        linkTo(methodOn(BookController.class).getBook(barcode.getValue())).withSelfRel(),
+                        linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withRel("in-stock")))
+                .collect(Collectors.toList());
+        return CollectionModel.of(barcodes, linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withSelfRel());
     }
 
     //Optional – barcodes for each group sorted by total price
     @GetMapping("/books/barcodes-sorted-by-total-price/{bookType}")
-    public ArrayList<String> getBarcodesSortedByTotalPriceAscByBookType(@PathVariable String bookType) throws Exception {
+    public ArrayList<String> getBarcodesSortedByTotalPriceAscByBookType(@PathVariable String bookType) {
         return bookService.getBarcodesSortedByTotalPriceByBookType(bookType);
     }
 }
