@@ -22,26 +22,17 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    public Set<Author> parseAuthors(BookAuthorDTO dto) {
-        if (dto.getAuthors() != null) {
-            Set<Author> authors = new HashSet<>();
-            for (String author : dto.getAuthors()) {
-                String[] name = parseName(author);
-                Optional<Author> a = authorRepository.findOneByNameAndLastName(name[0], name[1]);
-                if (a.isEmpty()) {
-                    a = Optional.ofNullable(saveAuthor(new Author(name[0], name[1])));
-                }
-                a.ifPresent(authors::add);
+    public Set<Author> retrieveOrCreateAuthorsFromDB(Set<BookAuthorDTO.AuthorDTO> authorDTOs) {
+        Set<Author> authors = new HashSet<>();
+        for (BookAuthorDTO.AuthorDTO authorDTO : authorDTOs) {
+            var fName = authorDTO.getName();
+            var lName = authorDTO.getLastName();
+            Optional<Author> a = authorRepository.findOneByNameAndLastName(authorDTO.getName(), authorDTO.getLastName());
+            if (a.isEmpty()) {
+                a = Optional.ofNullable(saveAuthor(new Author(fName, lName)));
             }
-            return authors;
-        } else return new HashSet<>();
-    }
-
-    public String[] parseName(String author) {
-        int spaceLocation = author.indexOf(' ');
-        int length = author.length();
-        String firstName = author.substring(0, spaceLocation).strip();
-        String lastName = author.substring(spaceLocation, length).strip();
-        return new String[]{firstName, lastName};
+            a.ifPresent(authors::add);
+        }
+        return authors;
     }
 }
