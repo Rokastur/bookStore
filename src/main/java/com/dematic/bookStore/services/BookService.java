@@ -86,17 +86,18 @@ public class BookService {
         return new Book(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors);
     }
 
-    public Book retrieveBookByBarcode(String barcode) throws Exception {
+    public Book retrieveBookByBarcode(String barcode) {
         if (bookRepository.existsById(barcode)) {
             return bookRepository.getOneByBarcode(barcode);
-        } else throw new Exception("book with the barcode: " + barcode + " not found");
+        }
+        return null;
     }
 
     public Set<String> listBarcodesForTheInStockBooksGroupedByQuantity() {
         return bookRepository.findAllBarcodesOrderByNonNullQuantityDesc();
     }
 
-    public ArrayList<String> getBarcodesSortedByTotalPriceByBookType(String bookType) throws Exception {
+    public ArrayList<String> getBarcodesSortedByTotalPriceByBookType(String bookType) {
         Set<String> barcodesByBookType = bookRepository.findAllBarcodesByBookType(bookType);
         ArrayList<String> toSort = new ArrayList<>();
         for (String barcode : barcodesByBookType) {
@@ -114,7 +115,7 @@ public class BookService {
         return barcodesByTotalPriceDesc;
     }
 
-    public BigDecimal calculatePriceByBarcode(String barcode) throws Exception {
+    public BigDecimal calculatePriceByBarcode(String barcode) {
         Book book = retrieveBookByBarcode(barcode);
 
         var nonIndexedPrice = calculateNonIndexedPrice(book);
