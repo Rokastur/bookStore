@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,8 +20,17 @@ public class BookAuthorDTO {
     private String title;
     private Integer quantity;
     private BigDecimal unitPrice;
-    private String[] authors;
     private Integer scienceIndex;
     private LocalDate releaseYear;
+
+    private Set<AuthorDTO> authorsDTO = new HashSet<>();
+
+    @Getter
+    @Setter
+    public static class AuthorDTO {
+
+        private String name;
+        private String lastName;
+    }
 
 }
