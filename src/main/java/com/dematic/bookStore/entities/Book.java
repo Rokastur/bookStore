@@ -29,7 +29,7 @@ public class Book {
         this.title = title;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
-        this.authors = authors;
+        addAuthors(authors);
     }
 
     @Id
@@ -54,10 +54,9 @@ public class Book {
     )
     protected Set<Author> authors = new HashSet<>();
 
-    public void updateAuthors(Set<Author> authors) {
-        this.authors.retainAll(authors);
-        for (Author a : authors) {
-            a.getBooks().clear();
+    public void addAuthors(Set<Author> newAuthors) {
+        for (Author a : newAuthors) {
+            this.authors.add(a);
             a.getBooks().add(this);
         }
     }
