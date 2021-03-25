@@ -26,8 +26,11 @@ public class BookController {
     //A client can use a REST call to put a book into the system
     // providing its name, author, barcode, quantity, price per unit.
     @PostMapping("/books")
-    public Book addBook(@RequestBody @Valid BookAuthorDTO dto) {
-        return bookService.addNewBook(dto);
+    public EntityModel<Book> addBook(@RequestBody @Valid BookAuthorDTO dto) {
+        Book book = bookService.addNewBook(dto);
+        return EntityModel.of(book,
+                linkTo(methodOn(BookController.class).getBook(dto.getBarcode())).withSelfRel(),
+                linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withRel("in-stock"));
     }
 
     //A client can use a REST call to retrieve book’s information from a system by providing its barcode.
@@ -42,8 +45,11 @@ public class BookController {
 
     //A client can use a REST call to update any of its detail providing the barcode and updated field information.
     @PutMapping("/books/{barcode}")
-    public Book updateBook(@RequestBody @Valid BookAuthorDTO dto, @PathVariable String barcode) {
-        return bookService.updateBook(barcode, dto);
+    public EntityModel<Book> updateBook(@RequestBody @Valid BookAuthorDTO dto, @PathVariable String barcode) {
+        Book book = bookService.updateBook(barcode, dto);
+        return EntityModel.of(book,
+                linkTo(methodOn(BookController.class).getBook(barcode)).withSelfRel(),
+                linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withRel("in-stock"));
     }
 
     //A client can use a REST call to calculate the total price of specific books in the system
