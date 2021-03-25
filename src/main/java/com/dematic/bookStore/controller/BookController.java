@@ -1,5 +1,8 @@
 package com.dematic.bookStore.controller;
 
+import com.dematic.bookStore.controller.utility.BarcodesWrapper;
+import com.dematic.bookStore.controller.utility.BookAuthorDTO;
+import com.dematic.bookStore.controller.utility.PriceWrapper;
 import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.services.BookService;
 import org.springframework.hateoas.CollectionModel;

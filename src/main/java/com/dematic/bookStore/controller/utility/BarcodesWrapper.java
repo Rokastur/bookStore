@@ -1,4 +1,4 @@
-package com.dematic.bookStore.controller;
+package com.dematic.bookStore.controller.utility;
 
 import lombok.Getter;
 import lombok.Setter;

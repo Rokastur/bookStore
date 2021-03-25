@@ -1,7 +1,7 @@
 package com.dematic.bookStore.services;
 
-import com.dematic.bookStore.controller.BarcodesWrapper;
-import com.dematic.bookStore.controller.BookAuthorDTO;
+import com.dematic.bookStore.controller.utility.BarcodesWrapper;
+import com.dematic.bookStore.controller.utility.BookAuthorDTO;
 import com.dematic.bookStore.entities.AntiqueBook;
 import com.dematic.bookStore.entities.Author;
 import com.dematic.bookStore.entities.Book;

@@ -1,6 +1,6 @@
 package com.dematic.bookStore.entities;
 
-import com.dematic.bookStore.controller.BookAuthorDTO;
+import com.dematic.bookStore.controller.utility.BookAuthorDTO;
 import lombok.Getter;
 import lombok.Setter;
 
