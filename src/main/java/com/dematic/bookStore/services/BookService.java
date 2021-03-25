@@ -10,8 +10,6 @@ import com.dematic.bookStore.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -19,10 +17,12 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final AuthorService authorService;
+    private final PriceOperations priceOperations;
 
-    public BookService(BookRepository bookRepository, AuthorService authorService) {
+    public BookService(BookRepository bookRepository, AuthorService authorService, PriceOperations priceOperations) {
         this.bookRepository = bookRepository;
         this.authorService = authorService;
+        this.priceOperations = priceOperations;
     }
 
     public Book updateBook(String barcode, BookAuthorDTO dto) {
@@ -125,37 +125,6 @@ public class BookService {
     }
 
     public BigDecimal calculatePriceByBarcode(String barcode) {
-        Book book = retrieveBookByBarcode(barcode);
-
-        var nonIndexedPrice = calculateNonIndexedPrice(book);
-
-        if (book instanceof AntiqueBook) {
-            return calculateAntiqueBookPrice(book, nonIndexedPrice);
-        } else if (book instanceof ScienceJournal) {
-            return calculateScienceJournalPrice(book, nonIndexedPrice);
-        } else {
-            return nonIndexedPrice;
-        }
-    }
-
-    public BigDecimal calculateNonIndexedPrice(Book book) {
-        var quantity = new BigDecimal(book.getQuantity());
-        var nonRoundedTotalPrice = book.getUnitPrice().multiply(quantity);
-        var roundedTotalPrice = nonRoundedTotalPrice.setScale(2, RoundingMode.HALF_UP);
-        return roundedTotalPrice;
-    }
-
-    public BigDecimal calculateScienceJournalPrice(Book book, BigDecimal nonIndexedPrice) {
-        var scienceIndex = new BigDecimal(((ScienceJournal) book).getScienceIndex());
-        return nonIndexedPrice.multiply(scienceIndex).setScale(2, RoundingMode.HALF_UP);
-    }
-
-    public BigDecimal calculateAntiqueBookPrice(Book book, BigDecimal nonIndexedPrice) {
-        LocalDate currentTime = LocalDate.now();
-        var currentYear = currentTime.getYear();
-        var releaseYear = ((AntiqueBook) book).getReleaseYear().getYear();
-        double yearDifference = currentYear - releaseYear;
-        var ageIndex = yearDifference / 10;
-        return (nonIndexedPrice.multiply(new BigDecimal(ageIndex))).setScale(2, RoundingMode.HALF_UP);
+        return priceOperations.calculatePriceByBarcode(barcode);
     }
 }
