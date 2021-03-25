@@ -25,15 +25,6 @@ public class BookService {
         this.authorService = authorService;
     }
 
-    public boolean bookIsScienceJournal(BookAuthorDTO dto) {
-        return dto.getScienceIndex() != null;
-    }
-
-    public boolean bookIsAntique(BookAuthorDTO dto) {
-        return dto.getReleaseYear() != null;
-    }
-
-
     public Book updateBook(String barcode, BookAuthorDTO dto) {
         Set<Author> authors = authorService.retrieveOrCreateAuthorsFromDB(dto.getAuthorsDTO());
         Book book = bookRepository.getOneByBarcode(barcode);
@@ -75,6 +66,14 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public boolean bookIsScienceJournal(BookAuthorDTO dto) {
+        return dto.getScienceIndex() != null;
+    }
+
+    public boolean bookIsAntique(BookAuthorDTO dto) {
+        return dto.getReleaseYear() != null;
+    }
+
     public Book createNewScienceJournal(BookAuthorDTO dto, Set<Author> authors) {
         return new ScienceJournal(dto.getBarcode(), dto.getTitle(), dto.getQuantity(), dto.getUnitPrice(), authors, dto.getScienceIndex());
     }
@@ -101,7 +100,6 @@ public class BookService {
             var dto = new BarcodesWrapper();
             dto.setBarcode(bar);
             barcodesDTOS.add(dto);
-
         }
         return barcodesDTOS;
     }
@@ -140,6 +138,13 @@ public class BookService {
         }
     }
 
+    public BigDecimal calculateNonIndexedPrice(Book book) {
+        var quantity = new BigDecimal(book.getQuantity());
+        var nonRoundedTotalPrice = book.getUnitPrice().multiply(quantity);
+        var roundedTotalPrice = nonRoundedTotalPrice.setScale(2, RoundingMode.HALF_UP);
+        return roundedTotalPrice;
+    }
+
     public BigDecimal calculateScienceJournalPrice(Book book, BigDecimal nonIndexedPrice) {
         var scienceIndex = new BigDecimal(((ScienceJournal) book).getScienceIndex());
         return nonIndexedPrice.multiply(scienceIndex).setScale(2, RoundingMode.HALF_UP);
@@ -152,13 +157,5 @@ public class BookService {
         double yearDifference = currentYear - releaseYear;
         var ageIndex = yearDifference / 10;
         return (nonIndexedPrice.multiply(new BigDecimal(ageIndex))).setScale(2, RoundingMode.HALF_UP);
-    }
-
-    public BigDecimal calculateNonIndexedPrice(Book book) {
-        var quantity = new BigDecimal(book.getQuantity());
-        var nonRoundedTotalPrice = book.getUnitPrice().multiply(quantity);
-        var roundedTotalPrice = nonRoundedTotalPrice.setScale(2, RoundingMode.HALF_UP);
-        return roundedTotalPrice;
-
     }
 }
