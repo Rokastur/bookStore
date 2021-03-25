@@ -99,7 +99,7 @@ public class BookService {
         List<BarcodesWrapper> barcodesDTOS = new ArrayList<>();
         for (String bar : b) {
             var dto = new BarcodesWrapper();
-            dto.setValue(bar);
+            dto.setBarcode(bar);
             barcodesDTOS.add(dto);
 
         }
@@ -119,7 +119,7 @@ public class BookService {
         for (String str : toSort) {
             var barcode = str.substring(0, str.lastIndexOf('/'));
             var wrapper = new BarcodesWrapper();
-            wrapper.setValue(barcode);
+            wrapper.setBarcode(barcode);
             barcodesByTotalPriceDesc.add(wrapper);
         }
 

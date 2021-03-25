@@ -59,7 +59,7 @@ public class BookController {
     public CollectionModel<EntityModel<BarcodesWrapper>> getBarcodesForInStockBooks() {
         List<EntityModel<BarcodesWrapper>> barcodes = bookService.barcodesDTOS().stream()
                 .map(barcode -> EntityModel.of(barcode,
-                        linkTo(methodOn(BookController.class).getBook(barcode.getValue())).withSelfRel(),
+                        linkTo(methodOn(BookController.class).getBook(barcode.getBarcode())).withSelfRel(),
                         linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withRel("in-stock")))
                 .collect(Collectors.toList());
         return CollectionModel.of(barcodes, linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withSelfRel());
@@ -71,7 +71,7 @@ public class BookController {
     public CollectionModel<EntityModel<BarcodesWrapper>> getBarcodesSortedByTotalPriceAscByBookType(@PathVariable String bookType) {
         List<EntityModel<BarcodesWrapper>> barcodes = bookService.getBarcodesSortedByTotalPriceByBookType(bookType).stream()
                 .map(barcode -> EntityModel.of(barcode,
-                        linkTo(methodOn(BookController.class).getBook(barcode.getValue())).withSelfRel(),
+                        linkTo(methodOn(BookController.class).getBook(barcode.getBarcode())).withSelfRel(),
                         linkTo(methodOn(BookController.class).getBarcodesSortedByTotalPriceAscByBookType(bookType)).withRel("by-book-type-ordered-by-price"))).
                         collect(Collectors.toList());
         return CollectionModel.of(barcodes, linkTo(methodOn(BookController.class).getBarcodesSortedByTotalPriceAscByBookType(bookType)).withSelfRel());

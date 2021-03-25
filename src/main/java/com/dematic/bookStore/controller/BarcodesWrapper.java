@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class BarcodesWrapper {
 
-    private String value;
+    private String barcode;
 }
