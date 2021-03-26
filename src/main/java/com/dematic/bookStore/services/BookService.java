@@ -94,9 +94,9 @@ public class BookService {
     }
 
     public List<BarcodesWrapper> barcodesDTOS() {
-        List<String> b = bookRepository.findAllNonNullBarcodesOrderByQuantityDesc();
+        List<String> barcodes = bookRepository.findAllNonNullBarcodesOrderByQuantityDesc();
         List<BarcodesWrapper> barcodesDTOS = new ArrayList<>();
-        for (String bar : b) {
+        for (String bar : barcodes) {
             var dto = new BarcodesWrapper();
             dto.setBarcode(bar);
             barcodesDTOS.add(dto);
