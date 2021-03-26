@@ -104,7 +104,12 @@ public class BookService {
         return barcodesDTOS;
     }
 
-    public List<BarcodesWrapper> getBarcodesSortedByTotalPriceByBookType(String bookType) {
+    public List<BarcodesWrapper> sortAndRetrieveBarcodesByBookType(String bookType) {
+        List<String> sortedBarcodes = calculateAndSortPriceForBarcodesOfBookType(bookType);
+        return getBarcodesByTotalPriceDesc(sortedBarcodes);
+    }
+
+    public List<String> calculateAndSortPriceForBarcodesOfBookType(String bookType) {
         Set<String> barcodesByBookType = bookRepository.findAllBarcodesByBookType(bookType);
         List<String> toSort = new ArrayList<>();
         for (String barcode : barcodesByBookType) {
@@ -112,17 +117,21 @@ public class BookService {
             toSort.add(combined);
         }
         toSort.sort(new TotalPriceComparator());
+        return toSort;
+    }
 
-        List<BarcodesWrapper> barcodesByTotalPriceDesc = new ArrayList<>();
-        for (String str : toSort) {
+
+    public List<BarcodesWrapper> getBarcodesByTotalPriceDesc(List<String> sorted) {
+        List<BarcodesWrapper> barcodesSortedByTotalPriceDesc = new ArrayList<>();
+        for (String str : sorted) {
             var barcode = str.substring(0, str.lastIndexOf('/'));
             var wrapper = new BarcodesWrapper();
             wrapper.setBarcode(barcode);
-            barcodesByTotalPriceDesc.add(wrapper);
+            barcodesSortedByTotalPriceDesc.add(wrapper);
         }
-
-        return barcodesByTotalPriceDesc;
+        return barcodesSortedByTotalPriceDesc;
     }
+
 
     public BigDecimal calculatePriceByBarcode(String barcode) {
         return priceOperations.calculatePriceByBarcode(barcode);

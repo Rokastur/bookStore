@@ -80,7 +80,7 @@ public class BookController {
     //Optional – barcodes for each group sorted by total price
     @GetMapping("/books/barcodes-sorted-by-total-price/{bookType}")
     public CollectionModel<EntityModel<BarcodesWrapper>> getBarcodesSortedByTotalPriceAscByBookType(@PathVariable String bookType) {
-        List<EntityModel<BarcodesWrapper>> barcodes = bookService.getBarcodesSortedByTotalPriceByBookType(bookType).stream()
+        List<EntityModel<BarcodesWrapper>> barcodes = bookService.sortAndRetrieveBarcodesByBookType(bookType).stream()
                 .map(barcode -> EntityModel.of(barcode,
                         linkTo(methodOn(BookController.class).getBook(barcode.getBarcode())).withSelfRel(),
                         linkTo(methodOn(BookController.class).getBarcodesSortedByTotalPriceAscByBookType(bookType)).withRel("by-book-type-ordered-by-price"))).
