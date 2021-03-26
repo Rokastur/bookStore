@@ -13,6 +13,15 @@ import java.util.Set;
 @Setter
 public class BookAuthorDTO {
 
+    /**
+     * valid formats:
+     * ISBN 978-0-596-52068-7
+     * ISBN-13: 978-0-596-52068-7
+     * 978 0 596 52068 7
+     * 9780596520687
+     * ISBN-10 0-596-52068-9
+     * 0-596-52068-9
+     */
     public static final String ISBNRegex = "^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$";
 
     @Pattern(regexp = ISBNRegex, message = "Invalid ISBN [DTO]")
