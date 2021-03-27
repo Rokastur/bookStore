@@ -22,12 +22,12 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    public Set<Author> retrieveOrCreateAuthorsFromDB(Set<BookAuthorDTO.AuthorDTO> authorDTOs) {
+    public Set<Author> retrieveFromDbOrCreateNew(Set<BookAuthorDTO.AuthorDTO> authorDTOs) {
         Set<Author> authors = new HashSet<>();
         for (BookAuthorDTO.AuthorDTO authorDTO : authorDTOs) {
             var fName = authorDTO.getName();
             var lName = authorDTO.getLastName();
-            Optional<Author> a = authorRepository.findOneByNameAndLastName(authorDTO.getName(), authorDTO.getLastName());
+            Optional<Author> a = authorRepository.findOneByNameAndLastName(fName, lName);
             if (a.isEmpty()) {
                 a = Optional.ofNullable(saveAuthor(new Author(fName, lName)));
             }

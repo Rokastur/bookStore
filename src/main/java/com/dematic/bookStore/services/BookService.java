@@ -26,7 +26,7 @@ public class BookService {
     }
 
     public Book updateBook(String barcode, BookAuthorDTO dto) {
-        Set<Author> authors = authorService.retrieveOrCreateAuthorsFromDB(dto.getAuthorsDTO());
+        Set<Author> authors = authorService.retrieveFromDbOrCreateNew(dto.getAuthorsDTO());
         Book book = bookRepository.getOneByBarcode(barcode);
 
         if (dto.getBarcode() != null) {
@@ -54,7 +54,7 @@ public class BookService {
     }
 
     public Book addNewBook(BookAuthorDTO dto) {
-        Set<Author> authors = authorService.retrieveOrCreateAuthorsFromDB(dto.getAuthorsDTO());
+        Set<Author> authors = authorService.retrieveFromDbOrCreateNew(dto.getAuthorsDTO());
         Book book;
         if (bookIsScienceJournal(dto)) {
             book = createNewScienceJournal(dto, authors);
