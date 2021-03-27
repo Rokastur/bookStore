@@ -68,7 +68,7 @@ public class BookController {
     //A client can use a REST call to request a list of all barcodes for the books in stock grouped by quantity
     @GetMapping("/books/in-stock")
     public CollectionModel<EntityModel<BarcodesWrapper>> getBarcodesForInStockBooks() {
-        List<EntityModel<BarcodesWrapper>> barcodes = bookService.barcodesDTOS().stream()
+        List<EntityModel<BarcodesWrapper>> barcodes = bookService.getBarcodesWrapperForTheBooksInStock().stream()
                 .map(barcode -> EntityModel.of(barcode,
                         linkTo(methodOn(BookController.class).getBook(barcode.getBarcode())).withSelfRel(),
                         linkTo(methodOn(BookController.class).getBarcodesForInStockBooks()).withRel("in-stock")))

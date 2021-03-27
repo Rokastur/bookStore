@@ -99,12 +99,11 @@ public class BookService {
         return null;
     }
 
-    public List<BarcodesWrapper> barcodesDTOS() {
+    public List<BarcodesWrapper> getBarcodesWrapperForTheBooksInStock() {
         List<String> barcodes = bookRepository.findAllNonNullBarcodesOrderByQuantityDesc();
         List<BarcodesWrapper> barcodesDTOS = new ArrayList<>();
         for (String bar : barcodes) {
-            var dto = new BarcodesWrapper();
-            dto.setBarcode(bar);
+            var dto = new BarcodesWrapper(bar);
             barcodesDTOS.add(dto);
         }
         return barcodesDTOS;
@@ -112,7 +111,7 @@ public class BookService {
 
     public List<BarcodesWrapper> sortAndRetrieveBarcodesByBookType(String bookType) {
         List<String> sortedBarcodes = calculateAndSortPriceForBarcodesOfBookType(bookType);
-        return getBarcodesByTotalPriceDesc(sortedBarcodes);
+        return extractBarcodesToBarcodesWrapper(sortedBarcodes);
     }
 
     public List<String> calculateAndSortPriceForBarcodesOfBookType(String bookType) {
@@ -127,12 +126,11 @@ public class BookService {
     }
 
 
-    public List<BarcodesWrapper> getBarcodesByTotalPriceDesc(List<String> sorted) {
+    public List<BarcodesWrapper> extractBarcodesToBarcodesWrapper(List<String> sorted) {
         List<BarcodesWrapper> barcodesSortedByTotalPriceDesc = new ArrayList<>();
         for (String str : sorted) {
             var barcode = str.substring(0, str.lastIndexOf('/'));
-            var wrapper = new BarcodesWrapper();
-            wrapper.setBarcode(barcode);
+            var wrapper = new BarcodesWrapper(barcode);
             barcodesSortedByTotalPriceDesc.add(wrapper);
         }
         return barcodesSortedByTotalPriceDesc;
