@@ -17,13 +17,21 @@ import java.util.Set;
 @DiscriminatorValue("AntiqueBook")
 public class AntiqueBook extends Book {
 
+    public AntiqueBook() {
+        super();
+    }
+
     public AntiqueBook(String barcode, String title, Integer quantity, BigDecimal unitPrice, Set<Author> authors, LocalDate releaseYear) {
         super(barcode, title, quantity, unitPrice, authors);
         this.releaseYear = releaseYear;
     }
 
-    public AntiqueBook() {
-        super();
+    public AntiqueBook(Book book, LocalDate releaseYear) {
+        this.barcode = book.getBarcode();
+        this.title = book.getTitle();
+        this.quantity = book.getQuantity();
+        this.unitPrice = book.getUnitPrice();
+        this.releaseYear = releaseYear;
     }
 
     @NotNull(message = "Release year must not be null")

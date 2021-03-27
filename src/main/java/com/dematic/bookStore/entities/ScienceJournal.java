@@ -25,6 +25,14 @@ public class ScienceJournal extends Book {
         this.scienceIndex = scienceIndex;
     }
 
+    public ScienceJournal(Book book, Integer scienceIndex) {
+        this.barcode = book.getBarcode();
+        this.title = book.getTitle();
+        this.quantity = book.getQuantity();
+        this.unitPrice = book.getUnitPrice();
+        this.scienceIndex = scienceIndex;
+    }
+
     @NotNull(message = "Science index must not be null")
     @Column(name = "science_index")
     private Integer scienceIndex;
