@@ -2,8 +2,9 @@ package com.dematic.bookStore.controller.utility;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -27,9 +28,13 @@ public class BookAuthorDTO {
     @Pattern(regexp = ISBNRegex, message = "Invalid ISBN [DTO]")
     private String barcode;
     private String title;
+    @PositiveOrZero(message = "book must have a quantity of 0 or more")
     private Integer quantity;
+    @PositiveOrZero(message = "book must have a unit price value of 0 or more")
     private BigDecimal unitPrice;
+    @Range(min = 1, max = 10, message = "science index must be between 1 and 10, inclusive")
     private Integer scienceIndex;
+    @PastOrPresent(message = "only released books may be added")
     private LocalDate releaseYear;
 
     private Set<AuthorDTO> authorsDTO = new HashSet<>();
