@@ -7,6 +7,7 @@ import com.dematic.bookStore.entities.Author;
 import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.entities.ScienceJournal;
 import com.dematic.bookStore.repositories.BookRepository;
+import com.dematic.bookStore.services.exceptions.BookNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -90,10 +91,8 @@ public class BookService {
     }
 
     public Book retrieveBookByBarcode(String barcode) {
-        if (bookRepository.existsById(barcode)) {
-            return bookRepository.getOneByBarcode(barcode);
-        }
-        return null;
+        return bookRepository.findById(barcode)
+                .orElseThrow(() -> new BookNotFoundException("book with barcode " + barcode + " was not found"));
     }
 
     public List<BarcodesWrapper> getBarcodesWrapperForTheBooksInStock() {
