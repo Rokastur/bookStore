@@ -78,6 +78,7 @@ public class BookController {
     }
 
     //Optional – barcodes for each group sorted by total price
+    //current possible values for  - Book, AntiqueBook, ScienceJournal
     @GetMapping("/books/barcodes-sorted-by-total-price/{bookType}")
     public CollectionModel<EntityModel<BarcodesWrapper>> getBarcodesSortedByTotalPriceAscByBookType(@PathVariable String bookType) {
         List<EntityModel<BarcodesWrapper>> barcodes = bookService.sortAndRetrieveBarcodesByBookType(bookType).stream()
