@@ -24,12 +24,16 @@ public class Book {
     public Book() {
     }
 
-    public Book(String barcode, String title, Integer quantity, BigDecimal unitPrice, Set<Author> authors) {
-        this.barcode = barcode;
+    public Book(String ISBN, String title, Integer quantity, BigDecimal unitPrice, Set<Author> authors) {
+        this.barcode = convertToBarcode(ISBN);
         this.title = title;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         addAuthors(authors);
+    }
+
+    public String convertToBarcode(String ISBN) {
+        return ISBN.replaceAll("[- ]|^ISBN(?:-1[03])?:?", "");
     }
 
     @Id

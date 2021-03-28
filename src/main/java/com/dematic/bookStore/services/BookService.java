@@ -67,12 +67,6 @@ public class BookService {
         } else {
             book = createNewRegularBook(dto, authors);
         }
-
-        String barcode = book.getBarcode();
-        if (barcode != null) {
-            String b = barcode.replaceAll("[- ]|^ISBN(?:-1[03])?:?", "");
-            book.setBarcode(b);
-        }
         return bookRepository.save(book);
     }
 
