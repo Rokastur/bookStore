@@ -36,7 +36,7 @@ public class BookUpdateOperations {
     /*
      * if book is a antiqueBook and dto contains release year within threshold, update books release year.
      * if book is antiqueBook and dto contains release year after the threshold, convert to book.
-     * else if book is not a scienceJournal but dto contains release year within threshold, convert to antiqueBook.
+     * else if book is not an antiqueBook but dto contains release year within threshold, convert to antiqueBook.
      * */
     public Book updateReleaseYearOrConvertBookType(Book book, BookAuthorDTO dto) {
         boolean withinThreshold = false;
