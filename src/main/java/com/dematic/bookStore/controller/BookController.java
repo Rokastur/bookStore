@@ -2,11 +2,13 @@ package com.dematic.bookStore.controller;
 
 import com.dematic.bookStore.controller.utility.BarcodesWrapper;
 import com.dematic.bookStore.controller.utility.BookAuthorDTO;
+import com.dematic.bookStore.controller.utility.NewEntity;
 import com.dematic.bookStore.controller.utility.PriceWrapper;
 import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.services.BookService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,7 +31,7 @@ public class BookController {
     //A client can use a REST call to put a book into the system
     // providing its name, author, barcode, quantity, price per unit.
     @PostMapping("/books/add")
-    public EntityModel<Book> addBook(@RequestBody @Valid BookAuthorDTO dto) {
+    public EntityModel<Book> addBook(@RequestBody @Validated(NewEntity.class) BookAuthorDTO dto) {
         Book book = bookService.addNewBook(dto);
         return EntityModel.of(book,
                 linkTo(methodOn(BookController.class).getBook(dto.getBarcode())).withSelfRel(),
