@@ -4,6 +4,7 @@ import com.dematic.bookStore.entities.AntiqueBook;
 import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.entities.ScienceJournal;
 import com.dematic.bookStore.repositories.BookRepository;
+import com.dematic.bookStore.services.exceptions.BookNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -20,7 +21,8 @@ public class PriceOperations {
     }
 
     public BigDecimal calculatePriceByBarcode(String barcode) {
-        Book book = bookRepository.getOneByBarcode(barcode);
+        Book book = bookRepository.findById(barcode).
+                orElseThrow(() -> new BookNotFoundException("book with barcode " + barcode + " was not found"));
         var nonIndexedPrice = calculateNonIndexedPrice(book);
 
         if (book instanceof AntiqueBook) {

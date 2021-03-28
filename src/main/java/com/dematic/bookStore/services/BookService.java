@@ -28,7 +28,7 @@ public class BookService {
 
     public Book updateBook(String barcode, BookAuthorDTO dto) {
         Set<Author> authors = authorService.retrieveFromDbOrCreateNew(dto.getAuthorsDTO());
-        Book book = bookRepository.getOneByBarcode(barcode);
+        Book book = retrieveBookByBarcode(barcode);
 
         if (dto.getQuantity() != null) {
             book.setQuantity(dto.getQuantity());
