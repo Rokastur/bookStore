@@ -18,12 +18,12 @@ public class BookTypeConversionOperations {
         this.bookRepository = bookRepository;
     }
 
+    /*
+     * if book is a scienceJournal and dto contains not null science index, update books science index.
+     * if book is scienceJournal and dto contains null scienceIndex, convert to book.
+     * else if book is not a scienceJournal but dto contains not null science index, convert to scienceJournal.
+     * */
     public Book updateScienceIndexOrConvertBookType(Book book, BookAuthorDTO dto) {
-        /*
-         * if book is a scienceJournal and dto contains not null science index, update books science index.
-         * if book is scienceJournal and dto contains null scienceIndex, convert to book.
-         * else if book is not a scienceJournal but dto contains not null science index, convert to scienceJournal.
-         * */
         if (book instanceof ScienceJournal) {
             if (dto.getScienceIndex() != null) {
                 ((ScienceJournal) book).setScienceIndex(dto.getScienceIndex());
@@ -36,12 +36,12 @@ public class BookTypeConversionOperations {
         return book;
     }
 
+    /*
+     * if book is a antiqueBook and dto contains release year within threshold, update books release year.
+     * if book is antiqueBook and dto contains release year after the threshold, convert to book.
+     * else if book is not a scienceJournal but dto contains release year within threshold, convert to antiqueBook.
+     * */
     public Book updateReleaseYearOrConvertBookType(Book book, BookAuthorDTO dto) {
-        /*
-         * if book is a antiqueBook and dto contains release year within threshold, update books release year.
-         * if book is antiqueBook and dto contains release year after the threshold, convert to book.
-         * else if book is not a scienceJournal but dto contains release year within threshold, convert to antiqueBook.
-         * */
         boolean withinThreshold = false;
         if (dto.getReleaseYear() != null) {
             withinThreshold = dto.getReleaseYear().isBefore(LocalDate.parse("1900-01-01"));
