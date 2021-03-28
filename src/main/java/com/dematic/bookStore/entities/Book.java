@@ -37,7 +37,7 @@ public class Book {
     }
 
     @Id
-    @Pattern(regexp = BookAuthorDTO.ISBNRegex, message = "Invalid ISBN [ENTITY]")
+    @Pattern(regexp = "^[0-9]{10}$|^[0-9]{13}$", message = "Invalid barcode, must be 10 or 13 digits")
     protected String barcode;
 
     @NotEmpty(message = "Title must must not be null nor empty.")
