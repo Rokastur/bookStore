@@ -58,6 +58,8 @@ public class BookService {
     public Book addNewBook(BookAuthorDTO dto) {
         Set<Author> authors = authorService.retrieveFromDbOrCreateNew(dto.getAuthorsDTO());
         Book book;
+        //dto may have both science index and a release date. Science index takes precedence over the release date,
+        //therefore if dto contains science index, ScienceJournal will be created instead of AntiqueBook or Book.
         if (bookIsScienceJournal(dto)) {
             book = createNewScienceJournal(dto, authors);
         } else if (bookIsAntique(dto)) {
