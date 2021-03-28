@@ -87,6 +87,8 @@ class BookServiceTest {
         LocalDate releaseYear = LocalDate.of(1850, Month.JANUARY, 1);
         dto.setReleaseYear(releaseYear);
         assertTrue(bookService.bookIsAntique(dto));
+        dto.setReleaseYear(LocalDate.of(1901, Month.JANUARY, 1));
+        assertFalse(bookService.bookIsAntique(dto));
     }
 
     @Test
