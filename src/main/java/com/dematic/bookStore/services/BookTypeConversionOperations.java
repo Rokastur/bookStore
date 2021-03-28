@@ -19,18 +19,15 @@ public class BookTypeConversionOperations {
     }
 
     /*
-     * if book is a scienceJournal and dto contains not null science index, update books science index.
-     * if book is scienceJournal and dto contains null scienceIndex, convert to book.
-     * else if book is not a scienceJournal but dto contains not null science index, convert to scienceJournal.
+     * if book is a scienceJournal and if dto contains not null science index, update books science index.
+     * else if book is not a scienceJournal but dto contains science index, convert to scienceJournal.
      * */
     public Book updateScienceIndexOrConvertBookType(Book book, BookAuthorDTO dto) {
         if (book instanceof ScienceJournal) {
             if (dto.getScienceIndex() != null) {
                 ((ScienceJournal) book).setScienceIndex(dto.getScienceIndex());
-            } else {
-                book = transformToBook(book);
             }
-        } else if (dto.getScienceIndex() != null) {
+        } else {
             book = transformToScienceJournal(book, dto.getScienceIndex());
         }
         return book;
