@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
 @Component
-public class BookTypeConversionOperations {
+public class BookUpdateOperations {
 
     private final BookRepository bookRepository;
 
-    public BookTypeConversionOperations(BookRepository bookRepository) {
+    public BookUpdateOperations(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
