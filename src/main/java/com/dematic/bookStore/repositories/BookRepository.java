@@ -14,4 +14,7 @@ public interface BookRepository extends CrudRepository<Book, String> {
 
     @Query(value = "SELECT Barcode FROM BOOK WHERE book_type =:bookType", nativeQuery = true)
     Set<String> findAllBarcodesByBookType(String bookType);
+
+    @Query(value = "SELECT book_type FROM BOOK", nativeQuery = true)
+    Set<String> findAllBookTypes();
 }

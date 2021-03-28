@@ -8,6 +8,7 @@ import com.dematic.bookStore.entities.Book;
 import com.dematic.bookStore.entities.ScienceJournal;
 import com.dematic.bookStore.repositories.BookRepository;
 import com.dematic.bookStore.services.exceptions.BookNotFoundException;
+import com.dematic.bookStore.services.exceptions.InvalidBookType;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -107,6 +108,10 @@ public class BookService {
     }
 
     public List<BarcodesWrapper> sortAndRetrieveBarcodesByBookType(String bookType) {
+        Set<String> bookTypes = bookRepository.findAllBookTypes();
+        if (!bookTypes.contains(bookType)) {
+            throw new InvalidBookType("no books of book type [" + bookType + "] found");
+        }
         List<String> sortedBarcodes = calculateAndSortPriceForBarcodesOfBookType(bookType);
         return extractBarcodesToBarcodesWrapper(sortedBarcodes);
     }
