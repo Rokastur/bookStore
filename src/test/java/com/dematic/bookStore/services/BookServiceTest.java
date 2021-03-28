@@ -42,7 +42,7 @@ class BookServiceTest {
         priceOperations = Mockito.mock(PriceOperations.class);
         bookRepository = Mockito.mock(BookRepository.class);
 
-        bookService = new BookService(bookRepository, null, priceOperations);
+        bookService = new BookService(bookRepository, null, priceOperations, null);
 
         author1 = new Author("John", "Doe");
         author1.setId(1L);
@@ -139,7 +139,7 @@ class BookServiceTest {
         when(priceOperations.calculatePriceByBarcode("GHI")).thenReturn(new BigDecimal("15"));
         when(priceOperations.calculatePriceByBarcode("DEF")).thenReturn(new BigDecimal("5"));
 
-        BookService bookService = new BookService(bookRepository, null, priceOperations);
+        BookService bookService = new BookService(bookRepository, null, priceOperations, null);
 
         List<String> sorted = bookService.calculateAndSortPriceForBarcodesOfBookType("Book");
         assertEquals(sorted.get(0), "DEF/5");

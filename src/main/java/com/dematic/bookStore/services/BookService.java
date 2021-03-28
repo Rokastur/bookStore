@@ -20,11 +20,13 @@ public class BookService {
     private final BookRepository bookRepository;
     private final AuthorService authorService;
     private final PriceOperations priceOperations;
+    private final BookTypeConversionOperations conversionOperations;
 
-    public BookService(BookRepository bookRepository, AuthorService authorService, PriceOperations priceOperations) {
+    public BookService(BookRepository bookRepository, AuthorService authorService, PriceOperations priceOperations, BookTypeConversionOperations conversionOperations) {
         this.bookRepository = bookRepository;
         this.authorService = authorService;
         this.priceOperations = priceOperations;
+        this.conversionOperations = conversionOperations;
     }
 
     public Book updateBook(String barcode, BookAuthorDTO dto) {
@@ -43,11 +45,12 @@ public class BookService {
         if (!authors.isEmpty()) {
             book.addAuthors(authors);
         }
-        if (book instanceof ScienceJournal && dto.getScienceIndex() != null) {
-            ((ScienceJournal) book).setScienceIndex(dto.getScienceIndex());
-        }
-        if (book instanceof AntiqueBook && dto.getReleaseYear() != null) {
-            ((AntiqueBook) book).setReleaseYear(dto.getReleaseYear());
+
+        //if dto contains scienceIndex, release year will be ignored
+        if (book instanceof ScienceJournal || dto.getScienceIndex() != null) {
+            book = conversionOperations.updateScienceIndexOrConvertBookType(book, dto);
+        } else if (book instanceof AntiqueBook || dto.getReleaseYear() != null) {
+            book = conversionOperations.updateReleaseYearOrConvertBookType(book, dto);
         }
         return bookRepository.save(book);
     }
