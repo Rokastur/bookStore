@@ -30,6 +30,7 @@ public class ScienceJournal extends Book {
         this.title = book.getTitle();
         this.quantity = book.getQuantity();
         this.unitPrice = book.getUnitPrice();
+        addAuthors(book.getAuthors());
         this.scienceIndex = scienceIndex;
     }
 
