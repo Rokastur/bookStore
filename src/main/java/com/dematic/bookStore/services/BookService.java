@@ -11,6 +11,7 @@ import com.dematic.bookStore.services.exceptions.BookNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -75,7 +76,8 @@ public class BookService {
     }
 
     public boolean bookIsAntique(BookAuthorDTO dto) {
-        return dto.getReleaseYear() != null;
+        LocalDate threshold = LocalDate.parse("1900-01-01");
+        return dto.getReleaseYear() != null && dto.getReleaseYear().isBefore(threshold);
     }
 
     public Book createNewScienceJournal(BookAuthorDTO dto, Set<Author> authors) {
